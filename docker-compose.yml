@@ -12,6 +12,19 @@ services:
     ports:
       - "3333"
   
+  victorops-api-backend:
+    container_name: victorops-api-backend
+    image: tins/victorops-api-backend:latest
+    build:
+      context: backends/victorops-api-backend
+      dockerfile: src/Dockerfile
+    env_file:
+      - backends/victorops-api-backend/src/service/envvars
+    networks:
+      - vo-grafana-plugin
+    ports:
+      - "80"
+  
   grafana:
     container_name: grafana
     image: tins/grafana-victorops-plugin:latest
