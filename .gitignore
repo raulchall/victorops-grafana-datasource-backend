@@ -1,0 +1,13 @@
+.vs/
+bin/
+obj/
+
+*.user
+envvars-*
+localdev-*
+.idea/
+node_modules
+node_modules/
+*.patch
+.DS_Store
+.vscode
