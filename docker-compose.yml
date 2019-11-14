@@ -23,25 +23,30 @@ services:
     networks:
       - vo-grafana-plugin
     ports:
-      - "80"
+      - "32834:80"
+  
+  redis:
+    image: redis
+    container_name: task-broker-redis
+    networks:
+      - vo-grafana-plugin
+    ports:
+      - 6379
   
   grafana:
     container_name: grafana
     image: tins/grafana-victorops-plugin:latest
     build:
-      context: .
-      dockerfile: grafana/Dockerfile
+      context: grafana
+      dockerfile: Dockerfile
       args:
         GRAFANA_VERSION: 'latest'
-        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource'
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      - ./plugins:/public/app/plugins/datasource/
+        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource,ryantxu-ajax-panel'
     networks:
       - vo-grafana-plugin
     ports:
       - "3306"
-      - "3000"
+      - "32793:3000"
 
 networks:
   vo-grafana-plugin:

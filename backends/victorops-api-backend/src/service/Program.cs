@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
 
 namespace VictorOpsBackendApi
 {
@@ -15,7 +16,33 @@ namespace VictorOpsBackendApi
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            // Setup the log level. Defaults to Error
+            var logEventLevel = LogEventLevel.Error;
+            if (!Enum.TryParse(Environment.GetEnvironmentVariable("LogLevel"), false, out logEventLevel))
+            {
+                logEventLevel = LogEventLevel.Error;
+            }
+            
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Is(logEventLevel)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Starting App...");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "App terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -36,6 +63,7 @@ namespace VictorOpsBackendApi
                         services.Configure<AppConfiguration>(builderContext.Configuration);
                     })
                     .UseStartup<Startup>();
-                });
+                })
+                .UseSerilog();
     }
 }

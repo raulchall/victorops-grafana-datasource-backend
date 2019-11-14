@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Gofer.NET;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Org.OpenAPITools.Api;
 using Org.OpenAPITools.Client;
+using Serilog;
+using Serilog.Events;
 
 namespace VictorOpsBackendApi
 {
@@ -32,18 +32,20 @@ namespace VictorOpsBackendApi
             var settings = services.BuildServiceProvider()
                         .GetService<IOptionsMonitor<AppConfiguration>>().CurrentValue;
             
-            var connectionString = "127.0.0.1:6379";
-            var taskQueue = TaskQueue.Redis(connectionString);
-
+            // Inject the configuration
+            services.AddSingleton<IRedisClientConfiguration>(provider => settings);
+            services.AddSingleton<IVictorOpsConfiguration>(provider => settings);
             
-            // services.AddSingleton<ITeamsApi>(provider => new TeamsApi(
-            //     new Configuration
-            //     {
-            //         ApiKey = settings.VictorOpsApiKey,
-            //         BasePath = settings.VictorOpsBasePath
-            //     }
-            // ));
+            // Create redis client
+            //services.AddSingleton<IRedisClient, RedisClient>();
 
+            //services.AddSingleton<ITaskManager, RedisTaskManager>();
+            //services.AddSingleton<IHostedService, TaskRunnerService>();
+
+            // services.AddSingleton<ITeamsApi>(provider => new TeamsApi());
+            // services.AddSingleton<IVictorOpsDataManager, VictorOpsDataManager>();
+            // services.AddSingleton<IHostedService, VictorOpsApiService>();
+            
             services.AddControllers();
         }
 
