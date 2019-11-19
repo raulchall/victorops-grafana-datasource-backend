@@ -14,6 +14,12 @@ namespace VictorOpsBackendApi.Models
         public string text { get; set; }
     }
 
+
+    public class SearchQueryRequest
+    {
+        public string target { get; set;}
+    }
+
     public class QueryRequest
     {
         /*
@@ -37,8 +43,9 @@ namespace VictorOpsBackendApi.Models
 
     public class Target
     {
-        public string refId { get; set;}
-        public string target { get; set;}
+        public string refId { get; set; }
+        public string target { get; set; }
+        public string type { get; set; }
     }
 
     public class DatetimeRange 

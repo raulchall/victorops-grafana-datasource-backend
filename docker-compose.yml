@@ -42,6 +42,8 @@ services:
       args:
         GRAFANA_VERSION: 'latest'
         GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource,ryantxu-ajax-panel'
+    environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
     networks:
       - vo-grafana-plugin
     ports:

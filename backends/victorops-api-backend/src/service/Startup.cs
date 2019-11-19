@@ -14,6 +14,7 @@ using Org.OpenAPITools.Api;
 using Org.OpenAPITools.Client;
 using Serilog;
 using Serilog.Events;
+using Microsoft.OpenApi.Models;
 
 namespace VictorOpsBackendApi
 {
@@ -42,11 +43,18 @@ namespace VictorOpsBackendApi
             //services.AddSingleton<ITaskManager, RedisTaskManager>();
             //services.AddSingleton<IHostedService, TaskRunnerService>();
 
-            // services.AddSingleton<ITeamsApi>(provider => new TeamsApi());
-            // services.AddSingleton<IVictorOpsDataManager, VictorOpsDataManager>();
-            // services.AddSingleton<IHostedService, VictorOpsApiService>();
+            services.AddSingleton<ITeamsApi>(provider => new TeamsApi());
+            services.AddSingleton<IUsersApi>(provider => new UsersApi());
+            services.AddSingleton<ITeamRepository, TeamRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
             
             services.AddControllers();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VictorOpsApi", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +64,16 @@ namespace VictorOpsBackendApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "VictorOpsApi");
+            });
 
             app.UseHttpsRedirection();
 
