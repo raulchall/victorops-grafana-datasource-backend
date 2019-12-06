@@ -15,6 +15,7 @@ using Org.OpenAPITools.Client;
 using Serilog;
 using Serilog.Events;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace VictorOpsBackendApi
 {
@@ -48,6 +49,9 @@ namespace VictorOpsBackendApi
             services.AddSingleton<ITeamRepository, TeamRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
             
+            services.AddDbContext<VictorOpsMetadataContext>(options =>
+                options.UseNpgsql(VictorOpsMetadataContext.ConnectionStringBuilder(settings)));
+
             services.AddControllers();
 
             // Register the Swagger generator, defining 1 or more Swagger documents

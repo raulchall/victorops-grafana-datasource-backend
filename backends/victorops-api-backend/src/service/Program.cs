@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using Microsoft.Extensions.Logging;
 
 namespace VictorOpsBackendApi
 {
@@ -33,7 +34,9 @@ namespace VictorOpsBackendApi
             try
             {
                 Log.Information("Starting App...");
-                CreateHostBuilder(args).Build().Run();
+                var host = CreateHostBuilder(args).Build();
+                CreateDbIfNotExists(host);
+                host.Run();
             }
             catch (Exception ex)
             {
@@ -42,6 +45,25 @@ namespace VictorOpsBackendApi
             finally
             {
                 Log.CloseAndFlush();
+            }
+        }
+
+        private static void CreateDbIfNotExists(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var context = services.GetRequiredService<VictorOpsMetadataContext>();
+                    context.Database.EnsureCreated();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<VictorOpsMetadataContext>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                }
             }
         }
 

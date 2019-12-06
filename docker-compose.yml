@@ -25,6 +25,20 @@ services:
     ports:
       - "32834:80"
   
+  postgresql-db:
+    container_name: "my_postgres"
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=VictorOpsMetadataDb
+    ports:
+      - "5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - vo-grafana-plugin
+  
   redis:
     image: redis
     container_name: task-broker-redis
@@ -57,3 +71,4 @@ networks:
 
 volumes:
   grafana-storage:
+  postgres-data:
