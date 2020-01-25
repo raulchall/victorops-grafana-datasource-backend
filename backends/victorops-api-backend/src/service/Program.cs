@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Microsoft.Extensions.Logging;
+using VictorOpsBackendApi.Repositories;
 
 namespace VictorOpsBackendApi
 {
@@ -56,12 +57,12 @@ namespace VictorOpsBackendApi
 
                 try
                 {
-                    var context = services.GetRequiredService<VictorOpsMetadataContext>();
+                    var context = services.GetRequiredService<VictorOpsDataContext>();
                     context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<VictorOpsMetadataContext>>();
+                    var logger = services.GetRequiredService<ILogger<VictorOpsDataContext>>();
                     logger.LogError(ex, "An error occurred creating the DB.");
                 }
             }

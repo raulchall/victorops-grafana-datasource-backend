@@ -5,10 +5,10 @@ namespace VictorOpsBackendApi
     {
         string VictorOpsApiId { get; }
         string VictorOpsApiKey { get; }
-        string VictorOpsMetadataDatabaseHost { get; }
-        string VictorOpsMetadataDatabaseName { get; }
-        string VictorOpsMetadataDatabaseUser { get; }
-        string VictorOpsMetadataDatabasePassword { get; }
-        string VictorOpsMetadataDatabasePort { get; }
+        string VictorOpsDatabaseHost { get; }
+        string VictorOpsDatabaseName { get; }
+        string VictorOpsDatabaseUser { get; }
+        string VictorOpsDatabasePassword { get; }
+        string VictorOpsDatabasePort { get; }
     }
 }

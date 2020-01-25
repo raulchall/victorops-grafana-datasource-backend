@@ -1,14 +1,13 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Org.OpenAPITools.Model;
 
-namespace VictorOpsBackendApi
+namespace VictorOpsBackendApi.Repositories
 {
     public interface ITeamRepository
     {
-        Task<TeamDetail> Get(string id);
-        Task<IEnumerable<TeamDetail>> GetAll();
-        Task<IEnumerable<TeamMember>> GetTeamMembers(string teamId);
-        Task<IEnumerable<TeamMember>> GetTeamMembersByTeamName(string teamName);
+        Task<Team> Get(string id);
+
+        Task<IEnumerable<Team>> GetAll(CancellationToken cancellationToken);
     }
 }
