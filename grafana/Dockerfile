@@ -1,11 +1,6 @@
 ARG GRAFANA_VERSION="latest"
 FROM grafana/grafana:${GRAFANA_VERSION}
 
-# Copy the plugin into the grafana plugin folder
-COPY ./plugins/grafana-victorops-datasource/dist /grafana-victorops-datasource
-
-COPY ./run-cdp.sh /run-cdp.sh
-
 USER grafana
 
 ARG GF_INSTALL_PLUGINS=""
@@ -19,4 +14,4 @@ RUN if [ ! -z "${GF_INSTALL_PLUGINS}" ]; then \
     done; \
 fi
 
-ENTRYPOINT ["/run-cdp.sh"]
+ENTRYPOINT ["/run.sh"]
