@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1581923050611,
+  "iteration": 1581969425262,
   "links": [],
   "panels": [
     {
@@ -24,7 +24,7 @@
       "datasource": "VictorOpsDS",
       "fontSize": "100%",
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 0
@@ -40,12 +40,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -55,7 +57,7 @@
           "decimals": 2,
           "pattern": "/.*/",
           "thresholds": [],
-          "type": "number",
+          "type": "string",
           "unit": "short"
         }
       ],
@@ -77,7 +79,7 @@
       "datasource": "VictorOpsDS",
       "fontSize": "100%",
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
@@ -93,12 +95,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -131,10 +135,10 @@
       "datasource": "VictorOpsDS",
       "fontSize": "100%",
       "gridPos": {
-        "h": 7,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 4,
       "options": {},
@@ -147,6 +151,7 @@
       "styles": [
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -175,8 +180,8 @@
       "type": "table"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 20,
+  "refresh": "10s",
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -184,8 +189,6 @@
       {
         "allValue": "*",
         "current": {
-          "selected": true,
-          "tags": [],
           "text": "TeamA",
           "value": "TeamA"
         },
@@ -211,7 +214,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -231,5 +234,5 @@
   "timezone": "",
   "title": "VictorOps Dashboard",
   "uid": "buCQ_ZbWz",
-  "version": 7
+  "version": 3
 }
