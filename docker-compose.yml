@@ -3,7 +3,7 @@ services:
 
   victorops-api-backend:
     container_name: victorops-api-backend
-    image: tins/victorops-api-backend:latest
+    image: raulchall/victorops-grafana-ds-backend:latest
     build:
       context: victorops-api-backend
       dockerfile: src/Dockerfile
