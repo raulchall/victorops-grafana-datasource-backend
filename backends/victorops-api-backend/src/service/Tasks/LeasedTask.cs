@@ -6,13 +6,13 @@ namespace VictorOpsBackendApi
     {
         public string Id { get; set; }
 
-        public TaskHandlerType HanlderType { get; set; }
+        public string HandlerType { get; set; }
 
-        public TaskHandlerSubType HandlerSubType { get; set; }
+        public string HandlerSubType { get; set; }
 
-        public TimeSpan Interval { get; set; } 
+        public int Interval { get; set; } 
 
-        public TimeSpan LeaseDuration { get; set; } 
+        public int LeaseDuration { get; set; } 
 
         public DateTime NextTimeToRun { get; set; }
     }

@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1574141744341,
+  "iteration": 1581923050611,
   "links": [],
   "panels": [
     {
@@ -24,8 +24,8 @@
       "datasource": "VictorOpsDS",
       "fontSize": "100%",
       "gridPos": {
-        "h": 8,
-        "w": 9,
+        "h": 7,
+        "w": 12,
         "x": 0,
         "y": 0
       },
@@ -77,9 +77,9 @@
       "datasource": "VictorOpsDS",
       "fontSize": "100%",
       "gridPos": {
-        "h": 8,
-        "w": 9,
-        "x": 9,
+        "h": 7,
+        "w": 12,
+        "x": 12,
         "y": 0
       },
       "id": 3,
@@ -122,7 +122,55 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Teams",
+      "title": "Users on $team team(s)",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": "VictorOpsDS",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 4,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "rawQuery": true,
+          "refId": "A",
+          "target": "oncall{team=$team}",
+          "type": "table"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "On Call on $team team(s)",
       "transform": "table",
       "type": "table"
     }
@@ -136,18 +184,17 @@
       {
         "allValue": "*",
         "current": {
+          "selected": true,
           "tags": [],
-          "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "text": "TeamA",
+          "value": "TeamA"
         },
         "datasource": "VictorOpsDS",
         "definition": "team",
         "hide": 0,
-        "includeAll": true,
+        "includeAll": false,
         "label": "Team",
-        "multi": true,
+        "multi": false,
         "name": "team",
         "options": [],
         "query": "team",
@@ -184,5 +231,5 @@
   "timezone": "",
   "title": "VictorOps Dashboard",
   "uid": "buCQ_ZbWz",
-  "version": 5
+  "version": 7
 }

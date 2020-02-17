@@ -5,6 +5,8 @@ namespace VictorOpsBackendApi
 {
     public interface ITaskHandler
     {
+        TaskHandlerType HandlerType { get; }
+        
         Task HandleTask(ILeasedTask task, CancellationToken cancellationToken);
     }
 }

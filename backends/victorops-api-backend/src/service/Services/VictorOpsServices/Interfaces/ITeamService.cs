@@ -8,7 +8,5 @@ namespace VictorOpsBackendApi.Services
     {
         Task<TeamDetail> Get(string id);
         Task<IEnumerable<TeamDetail>> GetAll();
-        Task<IEnumerable<TeamMember>> GetTeamMembers(string teamId);
-        Task<IEnumerable<TeamMember>> GetTeamMembersByTeamName(string teamName);
     }
 }

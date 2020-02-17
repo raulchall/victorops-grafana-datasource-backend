@@ -9,6 +9,7 @@ namespace VictorOpsBackendApi
     {
         TEAMS_UPDATE,
         USERS_UPDATE,
-        MEMBERS_UPDATE
+        MEMBERS_UPDATE,
+        ONCALL_UPDATE
     }
 }

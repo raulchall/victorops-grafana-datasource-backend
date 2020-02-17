@@ -9,6 +9,6 @@ namespace VictorOpsBackendApi
         /// <summary>
         /// Whether the lock is acquired.
         /// </summary>
-        Task<bool> TryAcquire();
+        Task<bool> TryAcquireAsync();
     }
 }

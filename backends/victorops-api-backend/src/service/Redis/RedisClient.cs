@@ -8,10 +8,16 @@ namespace VictorOpsBackendApi
 
     public delegate Task<TResult> DatabaseActionAsync<TResult>(IDatabase database);
 
+    public delegate void DatabaseAction(IDatabase database);
+
+    public delegate TResult DatabaseAction<TResult>(IDatabase database);
+
     public interface IRedisClient
     {
         Task<TResult> ExecuteAsync<TResult>(DatabaseActionAsync<TResult> databaseAction);
         Task ExecuteAsync(DatabaseActionAsync databaseAction);
+        TResult Execute<TResult>(DatabaseAction<TResult> databaseAction);
+        void Execute(DatabaseAction databaseAction);
     }
 
     public class RedisClient : IRedisClient
@@ -21,6 +27,28 @@ namespace VictorOpsBackendApi
         public RedisClient(IRedisClientConfiguration configuration)
         {
             _redisConnection = ConnectionMultiplexer.Connect(configuration.RedisEndpoints);
+        }
+
+        public TResult Execute<TResult>(DatabaseAction<TResult> databaseAction)
+        {
+            if (databaseAction == null)
+            {
+                throw new ArgumentNullException(nameof(databaseAction));
+            }
+
+            var db = _redisConnection.GetDatabase();
+            return databaseAction(db);
+        }
+
+        public void Execute(DatabaseAction databaseAction)
+        {
+            if (databaseAction == null)
+            {
+                throw new ArgumentNullException(nameof(databaseAction));
+            }
+
+            var db = _redisConnection.GetDatabase();
+            databaseAction(db);
         }
 
         public async Task<TResult> ExecuteAsync<TResult>(DatabaseActionAsync<TResult> databaseAction)

@@ -34,6 +34,11 @@ namespace VictorOpsBackendApi
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<ILeasedTask>> GetAll(CancellationToken cancellationToken)
+        {
+            return await _context.Tasks.ToListAsync(cancellationToken);
+        }
+
         public async Task<ILeasedTask> GetTask(string id, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -53,8 +58,7 @@ namespace VictorOpsBackendApi
             
             var entity = await _context.Tasks.SingleAsync(t => t.Id == task.Id);
             entity.HandlerSubType = task.HandlerSubType;
-            entity.HanlderType = task.HanlderType;
-            entity.Interval = task.Interval;
+            entity.HandlerType = task.HandlerType;
             entity.NextTimeToRun = task.NextTimeToRun;
 
             await _context.SaveChangesAsync();

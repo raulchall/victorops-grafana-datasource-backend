@@ -1,9 +1,11 @@
 
 namespace VictorOpsBackendApi
 {
-    public class AppConfiguration : IAppConfiguration, IVictorOpsConfiguration, IRedisClientConfiguration, ISqlTaskBrokerConfiguration
+    public class AppConfiguration : IAppConfiguration, IVictorOpsConfiguration, IRedisClientConfiguration, ISqlBackendConfiguration
     {
         public string LogLevel { get; set; }
+
+        public string AppMode { get; set; }
 
         public string VictorOpsApiId { get; set; }
 
@@ -11,24 +13,14 @@ namespace VictorOpsBackendApi
 
         public string RedisEndpoints { get; set; }
 
-        public string VictorOpsDatabaseHost { get; set; }
+        public string DatabaseHost { get; set; }
 
-        public string VictorOpsDatabaseName { get; set; }
+        public string DatabaseName { get; set; }
 
-        public string VictorOpsDatabaseUser { get; set; }
+        public string DatabaseUser { get; set; }
 
-        public string VictorOpsDatabasePassword { get; set; }
-
-        public string VictorOpsDatabasePort { get; set; }
-
-        public string SqlTaskBrokerDatabaseHost { get; set; }
-
-        public string SqlTaskBrokerDatabaseName { get; set; }
-
-        public string SqlTaskBrokerDatabaseUser { get; set; }
-
-        public string SqlTaskBrokerDatabasePassword { get; set; }
+        public string DatabasePassword { get; set; }
         
-        public string SqlTaskBrokerDatabasePort { get; set; }
+        public string DatabasePort { get; set; }
     }
 }

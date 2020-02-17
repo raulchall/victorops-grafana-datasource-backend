@@ -11,7 +11,6 @@ using Org.OpenAPITools.Api;
 namespace VictorOpsBackendApi.Controllers
 {
     [ApiController]
-    [Route("/v1/vops")]
     public class VictorOpsApiController : ControllerBase
     {
         private readonly ILogger<VictorOpsApiController> _logger;
@@ -29,7 +28,7 @@ namespace VictorOpsBackendApi.Controllers
         }
 
         [HttpGet]
-        [Route("/teams")]
+        [Route("/vops/teams")]
         public async Task<ActionResult> GetTeams()
         {
             var teams = await _teamsApi.ApiPublicV1TeamGetAsync(

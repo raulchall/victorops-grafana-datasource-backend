@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VictorOpsBackendApi.Repositories
 {
@@ -17,6 +18,10 @@ namespace VictorOpsBackendApi.Repositories
 
         public DateTime CreatedAt { get; set; }
 
-        public virtual ICollection<Team> Teams { get; set; }
+        [JsonIgnore]
+        public IList<UserTeam> Teams { get; set; }
+
+        [JsonIgnore]
+        public IList<UserOnCall> OnCalls { get; set; }
     }
 }

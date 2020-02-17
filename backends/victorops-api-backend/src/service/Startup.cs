@@ -17,6 +17,8 @@ using Serilog.Events;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using VictorOpsBackendApi.Repositories;
+using VictorOpsBackendApi.Sql;
+using VictorOpsBackendApi.Services;
 
 namespace VictorOpsBackendApi
 {
@@ -66,72 +68,57 @@ namespace VictorOpsBackendApi
                         .GetService<IOptionsMonitor<AppConfiguration>>().CurrentValue;
             
             // Inject the configuration
+            services.AddSingleton<IAppConfiguration>(provider => settings);
             services.AddSingleton<IRedisClientConfiguration>(provider => settings);
             services.AddSingleton<IVictorOpsConfiguration>(provider => settings);
-            
-            // Add the redis client used for task leasing
-            services.AddSingleton<IRedisClient, RedisClient>();
-            
-            // Add all the tasks to be handled
-            AddVictorOpsDataCollectionTasks(services);
-
-            // Add the task handling services
-            services.AddSingleton<ITaskRepository, SqlTaskRepository>();
-            services.AddSingleton<ITaskHandlerRegistry, TaskHandlerRegistry>();
-            services.AddSingleton<ILeasedLockProvider,RedisLeasedLockProvider>();
-            services.AddSingleton<IHostedService, TaskRunnerHostedService>();
+            services.AddSingleton<ISqlBackendConfiguration>(provider => settings);
 
             // Add the VictorOps Api Clients
-            services.AddSingleton<ITeamsApi>(provider => new TeamsApi());
-            services.AddSingleton<IUsersApi>(provider => new UsersApi());
+            services.AddSingleton<ITeamsApi, TeamsApi>();
+            services.AddSingleton<IUsersApi, UsersApi>();
+            services.AddSingleton<IOnCallApi, OnCallApi>();
+
+            // Add the VictorOps Services
+            // services.AddSingleton<IUserService, UserService>();
+            // services.AddSingleton<ITeamService, TeamService>();
+            // services.AddSingleton<IMemberService, MemberService>();
+            // services.AddSingleton<IOnCallService, OnCallService>();
+
+            // Add the VictorOps Mock Services (For testing only)
+            services.AddSingleton<IServiceDataMocks, ServiceDataMocks>();
+            services.AddSingleton<IUserService, UserServiceMock>();
+            services.AddSingleton<ITeamService, TeamServiceMock>();
+            services.AddSingleton<IMemberService, MemberServiceMock>();
+            services.AddSingleton<IOnCallService, OnCallServiceMock>();
 
             // Add the database repositories
             services.AddSingleton<ITeamRepository, TeamRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IOnCallRepository, OnCallRepository>();
             
             // Add the database context
-            services.AddDbContext<VictorOpsDataContext>(options =>
-                options.UseNpgsql(VictorOpsDataContext.ConnectionStringBuilder(settings)));
+            services.AddSqlBackendContext<VictorOpsDataContext>(settings);
+            services.AddSqlBackendContext<TaskBrokerDataContext>(settings);
+            
+            // Add the task handling services
+            services.AddSingleton<ITaskRepository, SqlTaskRepository>();
+            services.AddSingleton<ITaskHandlerRegistry, TaskHandlerRegistry>();
+            services.AddHostedService<TaskRunnerHostedService>();
+            
+            // Add lease lock services
+            services.AddLeaseLockServices();
 
-            services.AddDbContext<TaskBrokerDataContext>(options =>
-                options.UseNpgsql(TaskBrokerDataContext.ConnectionStringBuilder(settings)));
+            // Add task handlers
+            services.AddSingleton<ITaskHandler, VictorOpsTaskHandler>();
+            services.AddHostedService<TaskHandlerRegistrationService>();
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddNewtonsoftJson();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "VictorOpsApi", Version = "v1" });
-            });
-        }
-
-        private void AddVictorOpsDataCollectionTasks(IServiceCollection services)
-        {
-            services.AddSingleton<ILeasedTask>(p => new LeasedTask(){
-                Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.TEAMS_UPDATE}",
-                HanlderType = TaskHandlerType.VICTOROPS_API,
-                HandlerSubType = TaskHandlerSubType.TEAMS_UPDATE,
-                Interval = TimeSpan.FromSeconds(30),
-                LeaseDuration = TimeSpan.FromSeconds(30),
-                NextTimeToRun = DateTime.UtcNow
-            });
-
-            services.AddSingleton<ILeasedTask>(p => new LeasedTask(){
-                Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.USERS_UPDATE}",
-                HanlderType = TaskHandlerType.VICTOROPS_API,
-                HandlerSubType = TaskHandlerSubType.USERS_UPDATE,
-                Interval = TimeSpan.FromSeconds(30),
-                LeaseDuration = TimeSpan.FromSeconds(30),
-                NextTimeToRun = DateTime.UtcNow
-            });
-
-            services.AddSingleton<ILeasedTask>(p => new LeasedTask(){
-                Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.MEMBERS_UPDATE}",
-                HanlderType = TaskHandlerType.VICTOROPS_API,
-                HandlerSubType = TaskHandlerSubType.MEMBERS_UPDATE,
-                Interval = TimeSpan.FromSeconds(30),
-                LeaseDuration = TimeSpan.FromSeconds(30),
-                NextTimeToRun = DateTime.UtcNow
             });
         }
     }

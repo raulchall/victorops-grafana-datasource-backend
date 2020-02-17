@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,42 +7,46 @@ using Org.OpenAPITools.Model;
 
 namespace VictorOpsBackendApi.Services
 {
-    public class TeamService : ITeamService
+    public class MemberService : IMemberService
     {
-        private readonly ILogger<TeamService> _logger;
+        private readonly ILogger<MemberService> _logger;
         private readonly IVictorOpsConfiguration _configuration;
         private readonly ITeamsApi _teamsApi;
+        private readonly IUsersApi _usersApi;
 
-        public TeamService(
-            ILogger<TeamService> logger,
+        public MemberService(
+            ILogger<MemberService> logger,
             IVictorOpsConfiguration configuration,
-            ITeamsApi teamsApi
+            ITeamsApi teamsApi,
+            IUsersApi usersApi
         )
         {
             _logger          = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration   = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _teamsApi        = teamsApi ?? throw new ArgumentNullException(nameof(teamsApi));
+            _usersApi        = usersApi ?? throw new ArgumentNullException(nameof(usersApi));
         }
 
-        public async Task<TeamDetail> Get(string id)
+        public async Task<IEnumerable<TeamMember>> GetTeamMembers(string teamId)
         {
-            var team = await _teamsApi.ApiPublicV1TeamTeamGetAsync(
+            var response = await _teamsApi.ApiPublicV1TeamTeamMembersGetAsync(
                 _configuration.VictorOpsApiId,
                 _configuration.VictorOpsApiKey,
-                id
+                teamId
             );
 
-            return team;
+            return response.Members;
         }
 
-        public async Task<IEnumerable<TeamDetail>> GetAll()
+        public async Task<IEnumerable<SimpleTeamDetail>> GetUserTeams(string userId)
         {
-            var teams = await _teamsApi.ApiPublicV1TeamGetAsync(
+            var userTeamsResponse = await _usersApi.ApiPublicV1UserUserTeamsGetAsync(
                 _configuration.VictorOpsApiId,
-                _configuration.VictorOpsApiKey
+                _configuration.VictorOpsApiKey,
+                userId
             );
 
-            return teams;
+            return userTeamsResponse.Teams;
         }
     }
 }

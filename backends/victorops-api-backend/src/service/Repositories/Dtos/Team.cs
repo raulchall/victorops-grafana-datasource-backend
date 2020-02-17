@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace VictorOpsBackendApi.Repositories
 {
@@ -14,6 +15,10 @@ namespace VictorOpsBackendApi.Repositories
 
         public bool IsDefaultTeam { get; set; }
 
-        public virtual ICollection<User> Users { get; set; }
+        [JsonIgnore]
+        public IList<UserTeam> Users { get; set; }
+
+        [JsonIgnore]
+        public IList<OnCall> OnCalls { get; set; }
     }
 }

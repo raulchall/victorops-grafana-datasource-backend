@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace VictorOpsBackendApi
 {
@@ -9,9 +10,10 @@ namespace VictorOpsBackendApi
         private readonly IRedisClient _redisClient;
         private readonly string _lockKey;
         private readonly TimeSpan _leaseDuration;
+        private readonly TimeSpan? _extensionInterval;
         Action<Exception> _exceptionHandler;
         private readonly Guid _lockGuid;
-        private System.Timers.Timer _extendLockTimer;
+        private Timer _extendLockTimer;
 
         public RedisLeasedLock(
             IRedisClient redisClient,
@@ -25,16 +27,11 @@ namespace VictorOpsBackendApi
             _leaseDuration = leaseDuration;
             _exceptionHandler = exceptionHandler;
             _lockGuid = Guid.NewGuid();
+            _extensionInterval = extensionInterval;
             _extendLockTimer = null;
-
-            if (extensionInterval.HasValue)
-            {
-                _extendLockTimer = new System.Timers.Timer(extensionInterval.Value.Milliseconds);
-                _extendLockTimer.Elapsed += async ( sender, e ) => await ExtendLock();
-            }
         }
 
-        public async Task<bool> TryAcquire()
+        public async Task<bool> TryAcquireAsync()
         {
             try
             {
@@ -42,9 +39,11 @@ namespace VictorOpsBackendApi
                     db => db.LockTakeAsync(_lockKey, _lockGuid.ToString(), _leaseDuration)
                 );
 
-                if (lockAcquired && _extendLockTimer != null)
+                if (lockAcquired && _extensionInterval.HasValue)
                 {
-                    _extendLockTimer.Start();
+                    _extendLockTimer = new Timer(
+                        ExtendLock, null, _extensionInterval.Value.Milliseconds, 
+                        _extensionInterval.Value.Milliseconds);
                 }
 
                 return lockAcquired;
@@ -56,12 +55,12 @@ namespace VictorOpsBackendApi
             }
         }
 
-        private async Task ExtendLock()
+        private void ExtendLock(Object source)
         {
             try
             {
-                await _redisClient.ExecuteAsync(
-                    db => db.LockExtendAsync(_lockKey, _lockGuid.ToString(), _leaseDuration)
+                _redisClient.Execute(
+                    db => db.LockExtend(_lockKey, _lockGuid.ToString(), _leaseDuration)
                 );
             }
             catch (Exception ex)
@@ -74,7 +73,7 @@ namespace VictorOpsBackendApi
         {
             try
             {
-                _extendLockTimer?.Stop();
+                _extendLockTimer?.Dispose();
 
                 await _redisClient.ExecuteAsync(
                     db => db.LockReleaseAsync(_lockKey, _lockGuid.ToString())

@@ -63,7 +63,56 @@ namespace VictorOpsBackendApi
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<VictorOpsDataContext>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
+                    logger.LogError(ex, "An error occurred creating the DB");
+                }
+
+                try
+                {
+                    var context = services.GetRequiredService<TaskBrokerDataContext>();
+                    context.Database.EnsureCreated();
+
+                    context.Tasks.Add(new LeasedTask(){
+                        Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.TEAMS_UPDATE}",
+                        HandlerType = TaskHandlerType.VICTOROPS_API.ToString(),
+                        HandlerSubType = TaskHandlerSubType.TEAMS_UPDATE.ToString(),
+                        Interval = 30000, // 30 seconds
+                        LeaseDuration = 30000, // 30 seconds
+                        NextTimeToRun = DateTime.UtcNow
+                    });
+
+                    context.Tasks.Add(new LeasedTask(){
+                        Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.USERS_UPDATE}",
+                        HandlerType = TaskHandlerType.VICTOROPS_API.ToString(),
+                        HandlerSubType = TaskHandlerSubType.USERS_UPDATE.ToString(),
+                        Interval = 30000, // 30 seconds
+                        LeaseDuration = 30000, // 30 seconds
+                        NextTimeToRun = DateTime.UtcNow
+                    });
+
+                    context.Tasks.Add(new LeasedTask(){
+                        Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.MEMBERS_UPDATE}",
+                        HandlerType = TaskHandlerType.VICTOROPS_API.ToString(),
+                        HandlerSubType = TaskHandlerSubType.MEMBERS_UPDATE.ToString(),
+                        Interval = 30000, // 30 seconds
+                        LeaseDuration = 30000, // 30 seconds
+                        NextTimeToRun = DateTime.UtcNow
+                    });
+
+                    context.Tasks.Add(new LeasedTask(){
+                        Id = $"{TaskHandlerType.VICTOROPS_API}_{TaskHandlerSubType.ONCALL_UPDATE}",
+                        HandlerType = TaskHandlerType.VICTOROPS_API.ToString(),
+                        HandlerSubType = TaskHandlerSubType.ONCALL_UPDATE.ToString(),
+                        Interval = 30000, // 30 seconds
+                        LeaseDuration = 30000, // 30 seconds
+                        NextTimeToRun = DateTime.UtcNow
+                    });
+
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<TaskBrokerDataContext>>();
+                    logger.LogError(ex, "An error occurred creating the DB");
                 }
             }
         }

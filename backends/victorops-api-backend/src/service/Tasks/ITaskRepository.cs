@@ -9,5 +9,6 @@ namespace VictorOpsBackendApi
         Task<ILeasedTask> GetTask(string id, CancellationToken cancellationToken);
         Task CreateTask(ILeasedTask task, CancellationToken cancellationToken);
         Task UpdateTask(ILeasedTask task, CancellationToken cancellationToken);
+        Task<IEnumerable<ILeasedTask>> GetAll(CancellationToken stoppingToken);
     }
 }
