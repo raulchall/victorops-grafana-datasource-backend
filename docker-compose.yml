@@ -23,25 +23,46 @@ services:
     networks:
       - vo-grafana-plugin
     ports:
-      - "80"
+      - "32834:80"
+  
+  postgresql-db:
+    container_name: "my_postgres"
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=VictorOpsMetadataDb
+    ports:
+      - "5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - vo-grafana-plugin
+  
+  redis:
+    image: redis
+    container_name: task-broker-redis
+    networks:
+      - vo-grafana-plugin
+    ports:
+      - 6379
   
   grafana:
     container_name: grafana
     image: tins/grafana-victorops-plugin:latest
     build:
-      context: .
-      dockerfile: grafana/Dockerfile
+      context: grafana
+      dockerfile: Dockerfile
       args:
         GRAFANA_VERSION: 'latest'
-        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource'
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      - ./plugins:/public/app/plugins/datasource/
+        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource,ryantxu-ajax-panel'
+    environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
     networks:
       - vo-grafana-plugin
     ports:
       - "3306"
-      - "3000"
+      - "32793:3000"
 
 networks:
   vo-grafana-plugin:
@@ -50,3 +71,4 @@ networks:
 
 volumes:
   grafana-storage:
+  postgres-data:

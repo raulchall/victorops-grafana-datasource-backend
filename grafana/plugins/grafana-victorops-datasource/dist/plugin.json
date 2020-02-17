@@ -1,0 +1,35 @@
+{
+  "name": "VictorOpsDS",
+  "id": "grafana-victorops-datasource",
+  "type": "datasource",
+
+  "partials": {
+    "config": "public/app/plugins/datasource/grafana-victorops-datasource/partials/config.html"
+  },
+
+  "metrics": true,
+  "annotations": true,
+
+  "info": {
+    "description": "Victor Ops datasource",
+    "author": {
+      "name": "Grafana Labs",
+      "url": "https://grafana.com"
+    },
+    "logos": {
+      "small": "img/simpleJson_logo.svg",
+      "large": "img/simpleJson_logo.svg"
+    },
+    "links": [
+      {"name": "GitHub", "url": "https://github.com/raulchall/victorops-grafana-datasource-plugin.git"},
+      {"name": "MIT License", "url": "https://github.com/raulchall/victorops-grafana-datasource-plugin/blob/master/LICENSE"}
+    ],
+    "version": "0.0.1-beta",
+    "updated": "2018-11-10"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "5.x.x",
+    "plugins": [ ]
+  }
+}

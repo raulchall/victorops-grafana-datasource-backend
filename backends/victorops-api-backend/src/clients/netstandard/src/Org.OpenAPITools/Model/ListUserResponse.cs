@@ -36,9 +36,9 @@ namespace Org.OpenAPITools.Model
         /// </summary>
         /// <param name="users">users.</param>
         /// <param name="selfUrl">selfUrl.</param>
-        public ListUserResponse(List<V1User> users = default(List<V1User>), string selfUrl = default(string))
+        public ListUserResponse(List<List<V1User>> users = default(List<List<V1User>>), string selfUrl = default(string))
         {
-            this.Users = users;
+            this.Users = users.FirstOrDefault();
             this.SelfUrl = selfUrl;
         }
         

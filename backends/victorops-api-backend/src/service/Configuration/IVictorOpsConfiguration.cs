@@ -1,5 +1,9 @@
-public interface IVictorOpsConfiguration
+
+namespace VictorOpsBackendApi
 {
-    string ApiKey { get; }
-    string BasePath { get; }
+    public interface IVictorOpsConfiguration
+    {
+        string VictorOpsApiId { get; }
+        string VictorOpsApiKey { get; }
+    }
 }
