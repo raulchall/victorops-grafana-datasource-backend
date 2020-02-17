@@ -1,27 +1,16 @@
 version: '3.7'
 services:
 
-  simple-json-backend:
-    container_name: simple-json-backend
-    image: tins/simple-json-backend:latest
-    build:
-      context: backends/grafana-simple-json-backend
-      dockerfile: Dockerfile
-    networks:
-      - vo-grafana-plugin
-    ports:
-      - "3333"
-  
   victorops-api-backend:
     container_name: victorops-api-backend
     image: tins/victorops-api-backend:latest
     build:
-      context: backends/victorops-api-backend
+      context: victorops-api-backend
       dockerfile: src/Dockerfile
     env_file:
-      - backends/victorops-api-backend/src/service/envvars
+      - victorops-api-backend/src/service/envvars
     networks:
-      - vo-grafana-plugin
+      - vo-grafana-datasource
     ports:
       - "32834:80"
   
@@ -37,13 +26,13 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - vo-grafana-plugin
+      - vo-grafana-datasource
   
   redis:
     image: redis
     container_name: task-broker-redis
     networks:
-      - vo-grafana-plugin
+      - vo-grafana-datasource
     ports:
       - 6379
   
@@ -55,19 +44,17 @@ services:
       dockerfile: Dockerfile
       args:
         GRAFANA_VERSION: 'latest'
-        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource,ryantxu-ajax-panel'
-    environment:
-      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+        GF_INSTALL_PLUGINS: 'grafana-simple-json-datasource'
     networks:
-      - vo-grafana-plugin
+      - vo-grafana-datasource
     ports:
       - "3306"
       - "32793:3000"
 
 networks:
-  vo-grafana-plugin:
+  vo-grafana-datasource:
     external:
-      name: vo-grafana-plugin
+      name: vo-grafana-datasource
 
 volumes:
   grafana-storage:
