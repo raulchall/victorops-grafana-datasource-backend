@@ -79,17 +79,23 @@ namespace VictorOpsBackendApi
             services.AddSingleton<IOnCallApi, OnCallApi>();
 
             // Add the VictorOps Services
-            // services.AddSingleton<IUserService, UserService>();
-            // services.AddSingleton<ITeamService, TeamService>();
-            // services.AddSingleton<IMemberService, MemberService>();
-            // services.AddSingleton<IOnCallService, OnCallService>();
-
-            // Add the VictorOps Mock Services (For testing only)
-            services.AddSingleton<IServiceDataMocks, ServiceDataMocks>();
-            services.AddSingleton<IUserService, UserServiceMock>();
-            services.AddSingleton<ITeamService, TeamServiceMock>();
-            services.AddSingleton<IMemberService, MemberServiceMock>();
-            services.AddSingleton<IOnCallService, OnCallServiceMock>();
+            if (string.IsNullOrWhiteSpace(settings.VictorOpsApiId) || 
+                string.IsNullOrWhiteSpace(settings.VictorOpsApiKey))
+            {
+                // Add the VictorOps Mock Services (For testing only)
+                services.AddSingleton<IServiceDataMocks, ServiceDataMocks>();
+                services.AddSingleton<IUserService, UserServiceMock>();
+                services.AddSingleton<ITeamService, TeamServiceMock>();
+                services.AddSingleton<IMemberService, MemberServiceMock>();
+                services.AddSingleton<IOnCallService, OnCallServiceMock>();
+            }
+            else
+            {
+                services.AddSingleton<IUserService, UserService>();
+                services.AddSingleton<ITeamService, TeamService>();
+                services.AddSingleton<IMemberService, MemberService>();
+                services.AddSingleton<IOnCallService, OnCallService>();
+            }
 
             // Add the database repositories
             services.AddSingleton<ITeamRepository, TeamRepository>();

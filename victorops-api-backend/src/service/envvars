@@ -1,0 +1,13 @@
+LogLevel=Error
+
+AppMode=standalone
+DatabaseName=VictorOpsMetadataDb
+
+#VictorOpsApiId=your-vo-api-id-here
+#VictorOpsApiKey=your-vo-api-key-here
+#AppMode=ha
+#RedisEndpoints=
+#DatabaseHost=
+#DatabaseUser=
+#DatabasePassword=
+#DatabasePort=
