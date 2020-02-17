@@ -13,6 +13,9 @@ services:
       - vo-grafana-datasource
     ports:
       - "32834:80"
+    depends_on:
+      - postgresql-db
+      - redis
   
   postgresql-db:
     container_name: "my_postgres"
@@ -38,7 +41,7 @@ services:
   
   grafana:
     container_name: grafana
-    image: tins/grafana-victorops-plugin:latest
+    image: raulchall/grafana-victorops-plugin:latest
     build:
       context: grafana
       dockerfile: Dockerfile

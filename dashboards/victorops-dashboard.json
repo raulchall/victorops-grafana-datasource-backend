@@ -16,12 +16,12 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1581969425262,
+  "iteration": 1581976922930,
   "links": [],
   "panels": [
     {
       "columns": [],
-      "datasource": "VictorOpsDS",
+      "datasource": "$datasource",
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -76,7 +76,7 @@
     },
     {
       "columns": [],
-      "datasource": "VictorOpsDS",
+      "datasource": "$datasource",
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -132,7 +132,7 @@
     },
     {
       "columns": [],
-      "datasource": "VictorOpsDS",
+      "datasource": "$datasource",
       "fontSize": "100%",
       "gridPos": {
         "h": 10,
@@ -187,6 +187,23 @@
   "templating": {
     "list": [
       {
+        "current": {
+          "text": "SimpleJson",
+          "value": "SimpleJson"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "grafana-simple-json-datasource",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
         "allValue": "*",
         "current": {
           "text": "TeamA",
@@ -234,5 +251,5 @@
   "timezone": "",
   "title": "VictorOps Dashboard",
   "uid": "buCQ_ZbWz",
-  "version": 3
+  "version": 5
 }
