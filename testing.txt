@@ -1,5 +1,0 @@
-<center>
-<img src="http://grafana.org/assets/img/logo_new_transparent_200x48.png" />
-</center>
-
-<p>Hellow Ajax Panel</p>
